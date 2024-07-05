@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const UserSchema = new Schema(
+const CategorySchema = new Schema(
   {
     items: [{ type: Schema.Types.ObjectId, ref: 'Item' }],
     poster: { type: String, required: true },
@@ -11,4 +11,4 @@ const UserSchema = new Schema(
   }
 )
 
-module.exports = mongoose.model('Category', UserSchema)
+module.exports = mongoose.model('Category', CategorySchema)
