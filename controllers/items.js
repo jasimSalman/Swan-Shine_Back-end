@@ -1,7 +1,10 @@
 const Item = require('../models/Item')
 const Shop = require('../models/Shop')
 const Category = require('../models/Category')
+const User = require('../models/User')
+const Cart = require('../models/Cart')
 
+//This function will retrieve all the items in each category.
 const index = async (req, res) => {
   try {
     const categoryId = req.params.categoryId
@@ -16,8 +19,9 @@ const index = async (req, res) => {
     console.log(err)
     res.status(500).send({ message: 'Internal server error' })
   }
-}
+} //http://localhost:3001/items/:categoryId
 
+//This function is responsible for adding a new item.
 const addItem = async (req, res) => {
   try {
     const userId = req.params.userId
@@ -54,9 +58,61 @@ const addItem = async (req, res) => {
     console.log(err)
     res.status(500).send({ message: 'Internal server error' })
   }
+} //http://localhost:3001/items/:userId
+
+// This function is responsible for update item info.
+const update = async (req, res) => {
+  const itemId = req.params.itemId
+  const payload = req.body
+  try {
+    const item = await Item.findByIdAndUpdate(itemId, payload, {
+      new: true,
+      runValidators: true
+    })
+
+    if (!item) {
+      return res.status(404).send({ error: 'Item not found' })
+    }
+    res.status(200).send(item)
+  } catch (e) {
+    console.error(e)
+    res.status(500).send({ error: 'Internal Server Error' })
+  }
+} // http://localhost:3001/:userId/:itemId
+
+const deleteItem = async (req, res) => {
+  const itemId = req.params.itemId
+
+  try {
+    // Remove the item from the category
+    await Category.findOneAndUpdate(
+      { items: itemId },
+      { $pull: { items: itemId } }
+    )
+
+    // Remove the item from the user carts
+    await Cart.updateMany({ items: itemId }, { $pull: { items: itemId } })
+
+    // Remove the item from the shops
+    await Shop.findOneAndUpdate({ items: itemId }, { $pull: { items: itemId } })
+
+    // Remove the item itself
+    const item = await Item.findByIdAndDelete(itemId)
+
+    if (!item) {
+      return res.status(404).send({ message: 'Item not found' })
+    }
+
+    res.status(200).send({ message: 'Item deleted successfully' })
+  } catch (e) {
+    console.error(e)
+    res.status(500).send({ error: 'Internal Server Error' })
+  }
 }
 
 module.exports = {
   index,
-  addItem
+  addItem,
+  update,
+  deleteItem
 }

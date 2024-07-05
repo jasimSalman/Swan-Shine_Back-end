@@ -28,7 +28,7 @@ const Register = async (req, res) => {
     console.error(error)
     throw error
   }
-}
+} // http://localhost:3001/user/register
 
 const Login = async (req, res) => {
   try {
@@ -55,7 +55,7 @@ const Login = async (req, res) => {
     console.log(error)
     res.status(401).send({ status: 'Error', msg: 'An error has occurred!' })
   }
-}
+} // http://localhost:3001/user/login
 
 const UpdatePassword = async (req, res) => {
   try {
@@ -85,7 +85,7 @@ const UpdatePassword = async (req, res) => {
     }
     return res.send({ status: 'Password Updated!', user: payload })
   }
-}
+} // http://localhost:3001/user/reset-password
 
 const CheckSession = async (req, res) => {
   const { payload } = res.locals
