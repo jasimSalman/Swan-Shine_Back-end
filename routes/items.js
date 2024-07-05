@@ -4,9 +4,11 @@ const itemsCtrl = require('../controllers/items')
 
 router.get('/:categoryId', itemsCtrl.index)
 
-router.post('/update/:itemId', itemsCtrl.update)
+router.put('/:itemId', itemsCtrl.update)
 
 router.post('/:userId', itemsCtrl.addItem)
+
+router.delete('/:itemId', itemsCtrl.deleteItem)
 
 // router.get('/:userId', itemsCtrl.show)
 

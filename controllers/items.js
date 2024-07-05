@@ -1,6 +1,8 @@
 const Item = require('../models/Item')
 const Shop = require('../models/Shop')
 const Category = require('../models/Category')
+const User = require('../models/User')
+const Cart = require('../models/Cart')
 
 //This function will retrieve all the items in each category.
 const index = async (req, res) => {
@@ -78,8 +80,39 @@ const update = async (req, res) => {
   }
 } // http://localhost:3001/:userId/:itemId
 
+const deleteItem = async (req, res) => {
+  const itemId = req.params.itemId
+
+  try {
+    // Remove the item from the category
+    await Category.findOneAndUpdate(
+      { items: itemId },
+      { $pull: { items: itemId } }
+    )
+
+    // Remove the item from the user carts
+    await Cart.updateMany({ items: itemId }, { $pull: { items: itemId } })
+
+    // Remove the item from the shops
+    await Shop.findOneAndUpdate({ items: itemId }, { $pull: { items: itemId } })
+
+    // Remove the item itself
+    const item = await Item.findByIdAndDelete(itemId)
+
+    if (!item) {
+      return res.status(404).send({ message: 'Item not found' })
+    }
+
+    res.status(200).send({ message: 'Item deleted successfully' })
+  } catch (e) {
+    console.error(e)
+    res.status(500).send({ error: 'Internal Server Error' })
+  }
+}
+
 module.exports = {
   index,
   addItem,
-  update
+  update,
+  deleteItem
 }
