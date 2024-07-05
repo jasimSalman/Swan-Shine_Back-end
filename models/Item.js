@@ -8,7 +8,7 @@ const ItemSchema = new Schema(
     price: { type: Integer, required: true },
     stock: { type: Integer, required: true },
     reviews: [{ type: Schema.Types.ObjectId, ref: 'Review' }],
-    sold_quantity: { type: Integer, required: true }
+    sold_quantity: { type: Number, required: true }
   },
   {
     timestamps: true
