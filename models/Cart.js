@@ -4,7 +4,7 @@ const CartSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     items: [{ type: Schema.Types.ObjectId, ref: 'Item' }],
-    quantity: { type: Number, required: true },
+    quantity: { type: Number, required: true }, //T.B.R
     checked_out: { type: Boolean, required: true, default: 'false' },
     date: { type: Date, required: true },
     total_price: { type: Number, required: true }

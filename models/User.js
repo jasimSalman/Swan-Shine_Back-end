@@ -8,16 +8,16 @@ const UserSchema = new Schema(
     type: { type: String, required: true },
     first_name: { type: String, required: true },
     last_name: { type: String, required: true },
-    cr: { type: String, default: '' },
-    fav_list: [{ type: Schema.Types.ObjectId, ref: 'Item' }],
-    place: [{ type: Schema.Types.ObjectId, ref: 'Place' }],
-    cart: [{ type: Schema.Types.ObjectId, ref: 'Cart' }],
+    cr: { type: String, default: '' }, //only for owner's
+    fav_list: [{ type: Schema.Types.ObjectId, ref: 'Item' }], //only for user's
+    shop: { type: Schema.Types.ObjectId, ref: 'Shop' }, //only for owner's
+    cart: [{ type: Schema.Types.ObjectId, ref: 'Cart' }], //only for user's
     reviews: [
       {
         type: Schema.Types.ObjectId,
         ref: 'Review'
       }
-    ]
+    ] //only for user's
   },
   {
     timestamps: true
