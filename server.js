@@ -7,6 +7,7 @@ const PORT = process.env.PORT || 3001
 
 require('./config/database')
 
+const usersRouter = require('./routes/user')
 // const categoryRouter = require('./routes/category')
 const itemsRouter = require('./routes/items')
 
@@ -18,6 +19,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
 // app.use('/category', categoryRouter)
+app.use('/users', usersRouter)
 app.use('/items', itemsRouter)
 
 app.listen(PORT, () => {

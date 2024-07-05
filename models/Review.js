@@ -5,7 +5,7 @@ const UserSchema = new Schema(
     user: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     poster: { type: String, required: true },
     name: { type: String, required: true },
-    rating: { type: Integer, required: true },
+    rating: { type: Number, required: true },
     items: { type: Schema.Types.ObjectId, ref: 'Item' }
   },
   {
