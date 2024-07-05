@@ -7,33 +7,34 @@ const Shop = require('./models/Shop')
 const shopData = [
   {
     name: 'Al Alawi Jewellery',
-    owner: 'Sarah Alalawi',
     email: 'sarah.alalawi@mail.com',
     items: [],
-    location: 'Manama'
+    location: 'Manama',
+    poster: 'https://www.none.com'
   },
   {
     name: 'Salman Gold Shop',
-    owner: 'Jassim Salman',
     email: 'Jassim@mail.com',
     items: [],
-    location: 'Sitra'
+    location: 'Sitra',
+    poster: 'https://www.none.com'
   },
   {
     name: 'Jellooo Gold Shop',
-    owner: 'Jassim Khalaf',
     email: 'Jello@mail.com',
     items: [],
-    location: 'Bilad Alqadeem'
+    location: 'Bilad Alqadeem',
+    poster: 'https://www.none.com'
   },
   {
     name: 'Jenan Jewellery',
-    owner: 'Jenan Zuhair',
     email: 'Jenan@mail.com',
     items: [],
-    location: 'Hamad Town'
+    location: 'Hamad Town',
+    poster: 'https://www.none.com'
   }
 ]
+
 const categoryData = [
   {
     name: 'Necklaces',
@@ -83,5 +84,5 @@ const seedCategories = async () => {
 }
 
 //call function
-// seedCategories()
-// seedShops()
+seedCategories()
+seedShops()

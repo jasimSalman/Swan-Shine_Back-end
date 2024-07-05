@@ -1,4 +1,6 @@
 const Item = require('../models/Item')
+const Shop = require('../models/Shop')
+const Category = require('../models/Category')
 
 const index = async (req, res) => {
   try {
@@ -16,6 +18,45 @@ const index = async (req, res) => {
   }
 }
 
+const addItem = async (req, res) => {
+  try {
+    const userId = req.params.userId
+    const { name, reqCategory, price, stock, image } = req.body
+
+    const shop = await Shop.findOne({ owner: userId })
+    if (!shop) {
+      return res.status(404).send('This user has no shop.')
+    }
+
+    const founded_category = await Category.findOne({ name: reqCategory })
+
+    if (!founded_category) {
+      return res.status(404).send('The category does not exist.')
+    }
+
+    const item = await Item.create({
+      name,
+      category: founded_category._id,
+      price,
+      stock,
+      shop: shop._id,
+      image
+    })
+
+    shop.items.push(item._id)
+    await shop.save()
+
+    founded_category.items.push(item._id)
+    await founded_category.save()
+
+    res.status(201).send(item)
+  } catch (err) {
+    console.log(err)
+    res.status(500).send({ message: 'Internal server error' })
+  }
+}
+
 module.exports = {
-  index
+  index,
+  addItem
 }
