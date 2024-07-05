@@ -1,12 +1,12 @@
 const axios = require('axios')
-const Category = require('../models/Category')
+const Shop = require('../models/Shop')
 
 const index = async (req, res) => {
   try {
-    const categories = await Category.find({})
-    res.json(categories)
+    const shops = await Shop.find({})
+    res.json(shops)
   } catch (err) {
-    console.error('Error fetching categories', err)
+    console.error('Error fetching shops', err)
     res.status(500).json({ error: 'Internal Server Error' })
   }
 }
