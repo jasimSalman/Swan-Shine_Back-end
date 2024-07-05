@@ -4,7 +4,7 @@ const ItemSchema = new Schema(
   {
     name: { type: String, required: true },
     shop: [{ type: Schema.Types.ObjectId, ref: 'Shop' }],
-    category: [{ type: Schema.Types.ObjectId, ref: 'category' }],
+    category: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
     price: { type: Integer, required: true },
     stock: { type: Integer, required: true },
     reviews: [{ type: Schema.Types.ObjectId, ref: 'Review' }],

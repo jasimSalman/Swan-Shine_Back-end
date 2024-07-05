@@ -35,6 +35,7 @@ const categoryData = [
 const seedCategories = async () => {
   try {
     await Category.insertMany(categoryData)
+    console.log('Seeding categories completed.')
   } catch (err) {
     console.error('Error seeding categories', err)
   }
