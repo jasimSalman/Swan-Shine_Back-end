@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const UserSchema = new Schema(
+const ItemSchema = new Schema(
   {
     name: { type: String, required: true },
     shop: [{ type: Schema.Types.ObjectId, ref: 'Shop' }],
@@ -15,4 +15,4 @@ const UserSchema = new Schema(
   }
 )
 
-module.exports = mongoose.model('Item', UserSchema)
+module.exports = mongoose.model('Item', ItemSchema)

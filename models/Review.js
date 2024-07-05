@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const UserSchema = new Schema(
+const ReviewSchema = new Schema(
   {
     user: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     poster: { type: String, required: true },
@@ -13,4 +13,4 @@ const UserSchema = new Schema(
   }
 )
 
-module.exports = mongoose.model('Review', UserSchema)
+module.exports = mongoose.model('Review', ReviewSchema)
