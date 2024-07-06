@@ -86,6 +86,22 @@ const deleteFromCart = async (req, res) => {
   }
 } //http://localhost:3001/cart/:userId/:itemId
 
+//This function will show all the items in the currect cart.
+const index = async (req, res) => {
+  const userId = req.params.userId
+  try {
+    const cart = await Cart.findOne({
+      user: userId,
+      checked_out: false
+    }).populate('items.item')
+    if (!cart) {
+      return res.status(404).json({ error: 'No current cart found' })
+    }
+
+    res.json(cart.items)
+  } catch (e) {}
+} //http://localhost:3001/cart/:userId
+
 module.exports = {
   addToCart,
   deleteFromCart,
