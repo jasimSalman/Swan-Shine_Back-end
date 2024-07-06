@@ -5,15 +5,29 @@ const Register = async (req, res) => {
   try {
     const { first_name, last_name, username, email, password, type, cr } =
       req.body
-    let passwordDigest = await middleware.hashPassword(password)
 
     let existingUser = await User.findOne({ username })
     if (existingUser) {
       return res
         .status(400)
         .send('A user with that username has already been registered!')
+    }
+
+    let passwordDigest = await middleware.hashPassword(password)
+    let user
+    if (type === 'owner') {
+      user = await User.create({
+        first_name,
+        last_name,
+        username,
+        email,
+        passwordDigest,
+        type,
+        cr,
+        state: false
+      })
     } else {
-      const user = await User.create({
+      user = await User.create({
         first_name,
         last_name,
         username,
@@ -22,11 +36,12 @@ const Register = async (req, res) => {
         type,
         cr
       })
-      res.send(user)
+
+      res.status(201).send(user)
     }
   } catch (error) {
     console.error(error)
-    throw error
+    res.status(500).send('An error occurred while registering the user.')
   }
 } // http://localhost:3001/user/register
 
@@ -35,12 +50,18 @@ const Login = async (req, res) => {
     const { username, password } = req.body
     const user = await User.findOne({ username })
 
+    if (!user) {
+      return res
+        .status(401)
+        .send({ status: 'Error', msg: 'Unauthorized: User not found' })
+    }
+
     let matched = await middleware.comparePassword(
       user.passwordDigest,
       password
     )
 
-    if (matched) {
+    if (matched && user.state !== false) {
       let payload = {
         id: user._id,
         username: user.username,
