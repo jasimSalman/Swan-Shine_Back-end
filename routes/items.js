@@ -4,7 +4,7 @@ const itemsCtrl = require('../controllers/items')
 
 router.get('/:categoryId', itemsCtrl.index)
 
-router.get('/:itemId', itemsCtrl.show)
+router.get('/show/:itemId', itemsCtrl.show)
 
 router.put('/:itemId', itemsCtrl.update)
 
