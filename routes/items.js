@@ -2,16 +2,20 @@ const express = require('express')
 const router = express.Router()
 const itemsCtrl = require('../controllers/items')
 
-router.get('/:categoryId', itemsCtrl.index)
+router.get('/:itemId/reviews', itemsCtrl.showReview)
 
 router.get('/show/:itemId', itemsCtrl.show)
 
+router.get('/:categoryId', itemsCtrl.index)
+
 router.put('/:itemId', itemsCtrl.update)
+
+router.post('/:itemId/reviews/:userId', itemsCtrl.addReview)
 
 router.post('/:userId', itemsCtrl.addItem)
 
-router.delete('/:itemId', itemsCtrl.deleteItem)
+router.delete('/:itemId/reviews/:reviewId', itemsCtrl.deleteReview)
 
-// router.get('/:userId', itemsCtrl.show)
+router.delete('/:itemId', itemsCtrl.deleteItem)
 
 module.exports = router
