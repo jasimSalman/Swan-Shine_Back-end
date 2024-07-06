@@ -1,4 +1,3 @@
-const axios = require('axios')
 const Shop = require('../models/Shop')
 const Item = require('../models/Item')
 
