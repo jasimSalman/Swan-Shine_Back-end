@@ -4,9 +4,9 @@ const itemsCtrl = require('../controllers/items')
 
 router.get('/:itemId/reviews', itemsCtrl.showReview)
 
-router.get('/:categoryId', itemsCtrl.index)
+router.get('/show/:itemId', itemsCtrl.show)
 
-router.get('/:itemId', itemsCtrl.show)
+router.get('/:categoryId', itemsCtrl.index)
 
 router.put('/:itemId', itemsCtrl.update)
 
@@ -17,7 +17,5 @@ router.post('/:userId', itemsCtrl.addItem)
 router.delete('/:itemId/reviews/:reviewId', itemsCtrl.deleteReview)
 
 router.delete('/:itemId', itemsCtrl.deleteItem)
-
-// router.get('/:userId', itemsCtrl.show)
 
 module.exports = router
