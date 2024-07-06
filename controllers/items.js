@@ -3,6 +3,7 @@ const Shop = require('../models/Shop')
 const Category = require('../models/Category')
 const User = require('../models/User')
 const Cart = require('../models/Cart')
+const Review = require('../models/Review')
 
 //This function will retrieve all the items in each category.
 const index = async (req, res) => {
@@ -78,8 +79,9 @@ const update = async (req, res) => {
     console.error(e)
     res.status(500).send({ error: 'Internal Server Error' })
   }
-} // http://localhost:3001/:userId/:itemId
+} // http://localhost:3001/items/:itemId
 
+//This function is responsible for delete an item.
 const deleteItem = async (req, res) => {
   const itemId = req.params.itemId
 
@@ -110,9 +112,35 @@ const deleteItem = async (req, res) => {
   }
 }
 
+// This function  is responsible for retrive all the reviews of a specific item.
+const showReview = async (req, res) => {
+  try {
+    const itemId = req.params.itemId
+
+    const item = await Item.findById(itemId).populate({
+      path: 'reviews',
+      populate: {
+        path: 'user',
+        select: 'username'
+      }
+    })
+    if (!item) {
+      return res.status(404).send({ error: 'Item not found' })
+    }
+
+    res.send(item.reviews)
+  } catch (error) {
+    console.error(error)
+    res.status(500).send({ error: 'An error occurred while fetching reviews.' })
+  }
+} // http://localhost:3001/items/:itemId/reviews
+
 module.exports = {
   index,
   addItem,
   update,
-  deleteItem
+  deleteItem,
+  showReview,
+  addReview,
+  deleteReview
 }
