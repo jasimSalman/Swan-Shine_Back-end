@@ -24,10 +24,10 @@ const index = async (req, res) => {
 
 //This function will show the item's details
 const show = async (req, res) => {
-  const itemId = reg.params.itemId
+  const itemId = req.params.itemId
 
   try {
-    const item = await Item.findOne({ id: itemId })
+    const item = await Item.findOne({ _id: itemId })
     if (!item) {
       return res.status(404).send('Item not found !')
     }
@@ -36,7 +36,7 @@ const show = async (req, res) => {
     console.error('Error fetching Item details', err)
     res.status(500).send('Internal Server Error')
   }
-}
+} // http://localhost:3001/items/:itemId
 
 //This function is responsible for adding a new item.
 const addItem = async (req, res) => {

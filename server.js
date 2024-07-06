@@ -11,6 +11,7 @@ const categoryRouter = require('./routes/category')
 const itemsRouter = require('./routes/items')
 const shopRouter = require('./routes/shop')
 const usersRouter = require('./routes/user')
+const cartRouter = require('./routes/cart')
 
 const app = express()
 
@@ -23,6 +24,7 @@ app.use('/category', categoryRouter)
 app.use('/items', itemsRouter)
 app.use('/shop', shopRouter)
 app.use('/users', usersRouter)
+app.use('/cart', cartRouter)
 
 app.listen(PORT, () => {
   console.log(`Running Express server on Port ${PORT} . . .`)
