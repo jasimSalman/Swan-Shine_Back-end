@@ -6,6 +6,8 @@ router.get('/:itemId/reviews', itemsCtrl.showReview)
 
 router.get('/:categoryId', itemsCtrl.index)
 
+router.get('/:itemId', itemsCtrl.show)
+
 router.put('/:itemId', itemsCtrl.update)
 
 router.post('/:itemId/reviews/:userId', itemsCtrl.addReview)

@@ -22,6 +22,22 @@ const index = async (req, res) => {
   }
 } //http://localhost:3001/items/:categoryId
 
+//This function will show the item's details
+const show = async (req, res) => {
+  const itemId = reg.params.itemId
+
+  try {
+    const item = await Item.findOne({ id: itemId })
+    if (!item) {
+      return res.status(404).send('Item not found !')
+    }
+    res.json(item)
+  } catch (err) {
+    console.error('Error fetching Item details', err)
+    res.status(500).send('Internal Server Error')
+  }
+}
+
 //This function is responsible for adding a new item.
 const addItem = async (req, res) => {
   try {
@@ -190,6 +206,7 @@ const deleteReview = async (req, res) => {
 
 module.exports = {
   index,
+  show,
   addItem,
   update,
   deleteItem,
