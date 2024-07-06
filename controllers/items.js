@@ -135,6 +135,36 @@ const showReview = async (req, res) => {
   }
 } // http://localhost:3001/items/:itemId/reviews
 
+//This function will add a new review.
+const addReview = async (req, res) => {
+  const { review: reviewText, rating } = req.body
+  const userId = req.params.userId
+  const itemId = req.params.itemId
+
+  try {
+    const review = new Review({
+      review: reviewText,
+      rating,
+      user: userId,
+      item: itemId
+    })
+    const createdReview = await review.save()
+
+    const item = await Item.findById(itemId)
+    if (!item) {
+      return res.status(404).send({ message: 'Item not found' })
+    }
+
+    item.reviews.push(createdReview._id)
+    await item.save()
+
+    res.status(201).send(createdReview)
+  } catch (e) {
+    console.error(e)
+    res.status(500).send({ message: 'Internal Server Error' })
+  }
+} // http://localhost:3001/items/:itemId/reviews/:userId
+
 module.exports = {
   index,
   addItem,
