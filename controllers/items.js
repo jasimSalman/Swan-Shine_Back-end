@@ -3,6 +3,7 @@ const Shop = require('../models/Shop')
 const Category = require('../models/Category')
 const User = require('../models/User')
 const Cart = require('../models/Cart')
+const Review = require('../models/Review')
 
 //This function will retrieve all the items in each category.
 const index = async (req, res) => {
@@ -78,8 +79,9 @@ const update = async (req, res) => {
     console.error(e)
     res.status(500).send({ error: 'Internal Server Error' })
   }
-} // http://localhost:3001/:userId/:itemId
+} // http://localhost:3001/items/:itemId
 
+//This function is responsible for delete an item.
 const deleteItem = async (req, res) => {
   const itemId = req.params.itemId
 
@@ -110,9 +112,88 @@ const deleteItem = async (req, res) => {
   }
 }
 
+// This function  is responsible for retrive all the reviews of a specific item.
+const showReview = async (req, res) => {
+  try {
+    const itemId = req.params.itemId
+
+    const item = await Item.findById(itemId).populate({
+      path: 'reviews',
+      populate: {
+        path: 'user',
+        select: 'username'
+      }
+    })
+    if (!item) {
+      return res.status(404).send({ error: 'Item not found' })
+    }
+
+    res.send(item.reviews)
+  } catch (error) {
+    console.error(error)
+    res.status(500).send({ error: 'An error occurred while fetching reviews.' })
+  }
+} // http://localhost:3001/items/:itemId/reviews
+
+//This function will add a new review.
+const addReview = async (req, res) => {
+  const { review: reviewText, rating } = req.body
+  const userId = req.params.userId
+  const itemId = req.params.itemId
+
+  try {
+    const review = new Review({
+      review: reviewText,
+      rating,
+      user: userId,
+      item: itemId
+    })
+    const createdReview = await review.save()
+
+    const item = await Item.findById(itemId)
+    if (!item) {
+      return res.status(404).send({ message: 'Item not found' })
+    }
+
+    item.reviews.push(createdReview._id)
+    await item.save()
+
+    res.status(201).send(createdReview)
+  } catch (e) {
+    console.error(e)
+    res.status(500).send({ message: 'Internal Server Error' })
+  }
+} // http://localhost:3001/items/:itemId/reviews/:userId
+
+const deleteReview = async (req, res) => {
+  const reviewId = req.params.reviewId
+  const itemId = req.params.itemId
+
+  try {
+    const review = await Review.findById(reviewId)
+    if (!review) {
+      return res.status(404).send('Review not found')
+    }
+    await Item.updateMany({ _id: itemId }, { $pull: { reviews: reviewId } })
+    const deleted = await Review.findByIdAndDelete(reviewId)
+
+    if (!deleted) {
+      return res.status(404).send({ message: 'Review could not be deleted' })
+    }
+
+    res.status(200).send({ message: 'Review deleted successfully', deleted })
+  } catch (e) {
+    console.error(e)
+    res.status(500).send({ message: 'Internal Server Error' })
+  }
+} //http://localhost:3001/items/:itemId/reviews/:reviewId
+
 module.exports = {
   index,
   addItem,
   update,
-  deleteItem
+  deleteItem,
+  showReview,
+  addReview,
+  deleteReview
 }
