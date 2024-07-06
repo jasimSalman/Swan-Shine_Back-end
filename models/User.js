@@ -17,7 +17,8 @@ const UserSchema = new Schema(
         type: Schema.Types.ObjectId,
         ref: 'Review'
       }
-    ] //only for user's
+    ], //only for user's
+    state: { type: Boolean }
   },
   {
     timestamps: true
