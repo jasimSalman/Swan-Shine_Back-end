@@ -39,7 +39,6 @@ const show = async (req, res) => {
   }
 } //http://localhost:3001/items/show/:itemId
 
-
 //This function is responsible for adding a new item.
 const addItem = async (req, res) => {
   try {
