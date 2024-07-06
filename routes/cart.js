@@ -4,6 +4,8 @@ const cartCtrl = require('../controllers/cart')
 
 router.get('/:userId', cartCtrl.index)
 
+router.post('/checkout/:userId', cartCtrl.checkOut)
+
 router.post('/:userId', cartCtrl.addToCart)
 
 router.delete('/:userId/:itemId', cartCtrl.deleteFromCart)

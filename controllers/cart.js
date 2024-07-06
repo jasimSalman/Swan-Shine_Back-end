@@ -99,11 +99,33 @@ const index = async (req, res) => {
     }
 
     res.json(cart.items)
-  } catch (e) {}
+  } catch (e) {
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
 } //http://localhost:3001/cart/:userId
+
+//This function is responsible for the cart checkout.
+const checkOut = async (req, res) => {
+  const userId = req.params.userId
+
+  try {
+    const cart = await Cart.findOne({ user: userId, checked_out: false })
+    if (!cart) {
+      return res.status(404).json({ error: 'No current cart found' })
+    }
+
+    cart.checked_out = true
+    await cart.save()
+
+    res.json({ message: 'Checkout successful', cart })
+  } catch (e) {
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+} //http://localhost:3001/cart/checkout/:userId
 
 module.exports = {
   addToCart,
   deleteFromCart,
-  index
+  index,
+  checkOut
 }
