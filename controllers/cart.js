@@ -87,7 +87,7 @@ const deleteFromCart = async (req, res) => {
 } //http://localhost:3001/cart/:userId/:itemId
 
 //This function will show all the items in the currect cart.
-const index = async (req, res) => {
+const show = async (req, res) => {
   const userId = req.params.userId
   try {
     const cart = await Cart.findOne({
@@ -123,9 +123,28 @@ const checkOut = async (req, res) => {
   }
 } //http://localhost:3001/cart/checkout/:userId
 
+// This function will show all the orders.
+const index = async (req, res) => {
+  const userId = req.params.userId
+  try {
+    const carts = await Cart.find({
+      user: userId,
+      checked_out: true
+    }).populate('items.item')
+    if (carts.length === 0) {
+      return res.status(404).json({ error: 'No orders found' })
+    }
+
+    res.json(carts)
+  } catch (e) {
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+} //http://localhost:3001/cart/orders/:userId
+
 module.exports = {
   addToCart,
   deleteFromCart,
-  index,
-  checkOut
+  show,
+  checkOut,
+  index
 }
