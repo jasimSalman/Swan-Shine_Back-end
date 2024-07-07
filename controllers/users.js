@@ -1,6 +1,10 @@
 const User = require('../models/User')
 const Shop = require('../models/Shop')
+<<<<<<< HEAD
 const Item = require('../models/Item')
+=======
+const Items = require('../models/Item')
+>>>>>>> 4fb38b4 (display shop items to the owner)
 const middleware = require('../middleware/index')
 
 const Register = async (req, res) => {
@@ -128,7 +132,11 @@ const GetShopItems = async (req, res) => {
       return res.status(403).send({ Message: 'You are Unauthorized !' })
     }
 
+<<<<<<< HEAD
     const items = await Item.find({ shop: shopId })
+=======
+    const items = await Items.find({ shop: shopId })
+>>>>>>> 4fb38b4 (display shop items to the owner)
     res.status(200).send(items)
   } catch (err) {
     console.error(error)
@@ -136,6 +144,7 @@ const GetShopItems = async (req, res) => {
   }
 } // http://localhost:3001/user/shop/:shopId/items
 
+<<<<<<< HEAD
 // this function will display all orders to the shop owner
 const GetShopOrders = async (req, res) => {
   try {
@@ -194,6 +203,8 @@ const AcceptShopOwner = async (req, res) => {
   }
 } // http://localhost:3001/user/admin/accept-shop-owner/:userId
 
+=======
+>>>>>>> 4fb38b4 (display shop items to the owner)
 const CheckSession = async (req, res) => {
   const { payload } = res.locals
   res.send(payload)
@@ -228,8 +239,12 @@ module.exports = {
   Login,
   UpdatePassword,
   CheckSession,
+<<<<<<< HEAD
   GetShopItems,
   GetShopOrders,
   AcceptShopOwner,
   RejectShopOwner
+=======
+  GetShopItems
+>>>>>>> 4fb38b4 (display shop items to the owner)
 }
