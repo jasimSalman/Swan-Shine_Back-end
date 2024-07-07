@@ -166,12 +166,61 @@ const GetShopOrders = async (req, res) => {
     console.error(err)
     res.status(500).send('Server Error !')
   }
-}
+} // http://localhost:3001/user/shop/:shopId/orders
+
+//This function allows admin to accept shop owner
+
+const AcceptShopOwner = async (req, res) => {
+  try {
+    const { userId } = req.params
+
+    let user = await User.findById(userId)
+    if (!user) {
+      return res.status(404).send('User not found!')
+    }
+    if (user.type !== 'owner') {
+      return res.status(400).send('User is not a shop owner')
+    }
+
+    user.state = true
+
+    await user.save()
+
+    res.status(200).send({ message: 'Shop owner has been approved' })
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Server Error')
+  }
+} // http://localhost:3001/user/admin/accept-shop-owner/:userId
 
 const CheckSession = async (req, res) => {
   const { payload } = res.locals
   res.send(payload)
 }
+
+const RejectShopOwner = async (req, res) => {
+  try {
+    const { userId } = req.params
+
+    let user = await User.findById(userId)
+    if (!user) {
+      return res.status(404).send('User not found')
+    }
+
+    if (user.type !== 'owner') {
+      return res.status(400).send('User is not a shop owner')
+    }
+
+    await User.deleteOne({ _id: userId })
+
+    res
+      .status(200)
+      .send({ message: 'Shop owner registration has been rejected' })
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Server Error')
+  }
+} // http://localhost:3001/user/admin/reject-shop-owner/:userId
 
 module.exports = {
   Register,
@@ -179,5 +228,7 @@ module.exports = {
   UpdatePassword,
   CheckSession,
   GetShopItems,
-  GetShopOrders
+  GetShopOrders,
+  AcceptShopOwner,
+  RejectShopOwner
 }

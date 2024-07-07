@@ -24,4 +24,17 @@ router.get(
   controller.GetShopOrders
 )
 
+router.post(
+  '/admin/accept-shop-owner/:userId',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.AcceptShopOwner
+)
+router.post(
+  '/admin/reject-shop-owner/:userId',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.RejectShopOwner
+)
+
 module.exports = router
