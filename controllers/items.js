@@ -1,7 +1,6 @@
 const Item = require('../models/Item')
 const Shop = require('../models/Shop')
 const Category = require('../models/Category')
-const User = require('../models/User')
 const Cart = require('../models/Cart')
 const Review = require('../models/Review')
 
