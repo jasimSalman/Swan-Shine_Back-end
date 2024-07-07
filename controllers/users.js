@@ -28,7 +28,8 @@ const Register = async (req, res) => {
         cr,
         state: false
       })
-      res.status(201).send(user)
+      await user.save()
+      return res.status(201).send({ message: 'Pending approval' })
     } else {
       user = await User.create({
         first_name,
