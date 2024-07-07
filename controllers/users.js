@@ -26,6 +26,7 @@ const Register = async (req, res) => {
         cr,
         state: false
       })
+      res.status(201).send(user)
     } else {
       user = await User.create({
         first_name,
@@ -36,7 +37,6 @@ const Register = async (req, res) => {
         type,
         cr
       })
-
       res.status(201).send(user)
     }
   } catch (error) {
