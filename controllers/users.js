@@ -1,6 +1,6 @@
 const User = require('../models/User')
 const Shop = require('../models/Shop')
-const Items = require('../models/Item')
+const Item = require('../models/Item')
 const middleware = require('../middleware/index')
 
 const Register = async (req, res) => {
@@ -127,13 +127,46 @@ const GetShopItems = async (req, res) => {
       return res.status(403).send({ Message: 'You are Unauthorized !' })
     }
 
-    const items = await Items.find({ shop: shopId })
+    const items = await Item.find({ shop: shopId })
     res.status(200).send(items)
   } catch (err) {
     console.error(error)
     res.status(500).send('Internal server error')
   }
 } // http://localhost:3001/user/shop/:shopId/items
+
+// this function will display all orders to the shop owner
+const GetShopOrders = async (req, res) => {
+  try {
+    const { shopId } = req.params
+    const userId = res.locals.payload.id
+
+    const shop = await Shop.findById(shopId)
+
+    if (!shop) {
+      return res.status(404).send({ Message: 'Shop not found !' })
+    }
+
+    if (shop.owner.toString() !== userId) {
+      return res.status(401).send({ Message: 'Unauthorized Access' })
+    }
+
+    const carts = await Cart.find({ checked_out: true })
+      .populate('items.item')
+      .populate('user')
+
+    const shopOrders = carts.filter((cart) =>
+      cart.items.some(cartItem.item.shop.toString() === shopId)
+    )
+    if (shopOrders.length === 0) {
+      return res.status(404).send({ Message: 'No orders yet for this shop !' })
+    }
+    res.send(shopOrders)
+  } catch (err) {
+    console.error(err)
+    res.status(500).send('Server Error !')
+  }
+}
 
 const CheckSession = async (req, res) => {
   const { payload } = res.locals
@@ -145,5 +178,6 @@ module.exports = {
   Login,
   UpdatePassword,
   CheckSession,
-  GetShopItems
+  GetShopItems,
+  GetShopOrders
 }
