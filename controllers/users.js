@@ -1,4 +1,6 @@
 const User = require('../models/User')
+const Shop = require('../models/Shop')
+const Items = require('../models/Item')
 const middleware = require('../middleware/index')
 
 const Register = async (req, res) => {
@@ -26,6 +28,7 @@ const Register = async (req, res) => {
         cr,
         state: false
       })
+      res.status(201).send(user)
     } else {
       user = await User.create({
         first_name,
@@ -108,6 +111,30 @@ const UpdatePassword = async (req, res) => {
   }
 } // http://localhost:3001/user/reset-password
 
+//Display shop items for the owner
+const GetShopItems = async (req, res) => {
+  try {
+    const { shopId } = req.params
+    const userId = res.locals.payload.id
+
+    const shop = await Shop.findById(shopId)
+
+    if (!shop) {
+      return res.status(404).send({ Message: 'Shop is not found !' })
+    }
+
+    if (shop.owner.toString() !== userId) {
+      return res.status(403).send({ Message: 'You are Unauthorized !' })
+    }
+
+    const items = await Items.find({ shop: shopId })
+    res.status(200).send(items)
+  } catch (err) {
+    console.error(error)
+    res.status(500).send('Internal server error')
+  }
+} // http://localhost:3001/user/shop/:shopId/items
+
 const CheckSession = async (req, res) => {
   const { payload } = res.locals
   res.send(payload)
@@ -117,5 +144,6 @@ module.exports = {
   Register,
   Login,
   UpdatePassword,
-  CheckSession
+  CheckSession,
+  GetShopItems
 }

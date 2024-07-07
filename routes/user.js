@@ -11,5 +11,11 @@ router.get(
   middleware.verifyToken,
   controller.CheckSession
 )
+router.get(
+  '/shop/:shopId/items',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.GetShopItems
+)
 
 module.exports = router
