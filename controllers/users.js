@@ -39,7 +39,6 @@ const Register = async (req, res) => {
         type,
         cr
       })
-
       res.status(201).send(user)
     }
   } catch (error) {
