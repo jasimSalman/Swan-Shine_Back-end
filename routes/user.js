@@ -24,6 +24,13 @@ router.get(
   controller.GetShopOrders
 )
 
+router.delete(
+  '/admin/delete-shop-owner/:userId',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.DeleteShopOwner
+)
+
 router.post(
   '/admin/accept-shop-owner/:userId',
   middleware.stripToken,
@@ -35,6 +42,13 @@ router.post(
   middleware.stripToken,
   middleware.verifyToken,
   controller.RejectShopOwner
+)
+
+router.get(
+  '/admin/shop-owners',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.GetAllShopOwners
 )
 
 module.exports = router
