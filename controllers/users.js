@@ -30,7 +30,6 @@ const Register = async (req, res) => {
       })
       await user.save()
       return res.status(201).send({ message: 'Pending approval' })
-
     } else {
       user = await User.create({
         first_name,
