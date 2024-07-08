@@ -28,7 +28,7 @@ router.delete(
   '/admin/delete-shop-owner/:userId',
   middleware.stripToken,
   middleware.verifyToken,
-  controller.DeleteShopOwner
+  controller.DeleteOwner
 )
 
 router.post(
