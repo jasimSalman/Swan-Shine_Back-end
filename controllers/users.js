@@ -1,6 +1,7 @@
 const User = require('../models/User')
 const Shop = require('../models/Shop')
 const Item = require('../models/Item')
+const Cart = require('../models/Cart')
 const middleware = require('../middleware/index')
 
 const Register = async (req, res) => {
@@ -222,6 +223,53 @@ const RejectShopOwner = async (req, res) => {
   }
 } // http://localhost:3001/user/admin/reject-shop-owner/:userId
 
+// Delete an owner
+const DeleteOwner = async (req, res) => {
+  try {
+    const { userId } = req.params
+
+    let user = await User.findById(userId)
+    if (!user) {
+      return res.status(404).send('User not found')
+    }
+
+    if (user.type !== 'owner') {
+      return res.status(400).send('User is not a shop owner')
+    }
+    await Shop.deleteOne({ owner: userId })
+
+    await Item.deleteMany({ shop: user.shop })
+
+    await User.deleteOne({ _id: userId })
+
+    res.status(200).send({ message: 'Shop owner has been deleted' })
+  } catch (err) {
+    console.error(err)
+    res.status(500).send('Server Error')
+  }
+} // http://localhost:3001/users/admin/delete-shop-owner/:userId
+
+const GetAllShopOwners = async (req, res) => {
+  try {
+    const adminId = res.locals.payload.id
+
+    const admin = await User.findById(adminId)
+
+    if (!admin || admin.type !== 'admin') {
+      return res.status(403).send('Unauthorized access')
+    }
+    const shopOwners = await User.find({ type: 'owner' })
+
+    if (shopOwners.length === 0) {
+      return res.status(404).send('No shop owners found !')
+    }
+    res.status(200).send(shopOwners)
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Server Error')
+  }
+} //http://localhost:3001/users/admin/
+
 module.exports = {
   Register,
   Login,
@@ -230,5 +278,7 @@ module.exports = {
   GetShopItems,
   GetShopOrders,
   AcceptShopOwner,
-  RejectShopOwner
+  RejectShopOwner,
+  DeleteOwner,
+  GetAllShopOwners
 }
