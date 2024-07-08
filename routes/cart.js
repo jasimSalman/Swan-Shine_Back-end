@@ -17,7 +17,7 @@ router.get(
   cartCtrl.show
 )
 
-router.post(
+router.put(
   '/checkout/:userId',
   middleware.stripToken,
   middleware.verifyToken,
