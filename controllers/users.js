@@ -268,7 +268,7 @@ const GetAllShopOwners = async (req, res) => {
     console.error(error)
     res.status(500).send('Server Error')
   }
-} //http://localhost:3001/users/admin/
+} //http://localhost:3001/users/admin/admin/shop-owners
 
 module.exports = {
   Register,
