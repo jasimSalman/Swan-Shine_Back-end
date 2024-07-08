@@ -11,5 +11,30 @@ router.get(
   middleware.verifyToken,
   controller.CheckSession
 )
+router.get(
+  '/shop/:shopId/items',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.GetShopItems
+)
+router.get(
+  '/shop/:shopId/orders',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.GetShopOrders
+)
+
+router.post(
+  '/admin/accept-shop-owner/:userId',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.AcceptShopOwner
+)
+router.post(
+  '/admin/reject-shop-owner/:userId',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.RejectShopOwner
+)
 
 module.exports = router
