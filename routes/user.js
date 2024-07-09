@@ -12,7 +12,7 @@ router.get(
   controller.CheckSession
 )
 router.get(
-  '/shop/:shopId/items',
+  '/shop/:userId/items',
   middleware.stripToken,
   middleware.verifyToken,
   controller.GetShopItems
