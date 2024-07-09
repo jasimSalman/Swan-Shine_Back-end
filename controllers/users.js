@@ -182,8 +182,9 @@ const AcceptShopOwner = async (req, res) => {
     if (user.type !== 'owner') {
       return res.status(400).send('User is not a shop owner')
     }
-
+    const shop = Shop.create()
     user.state = true
+    user.shop.push(shop)
 
     await user.save()
 
