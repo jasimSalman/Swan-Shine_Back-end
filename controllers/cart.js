@@ -1,19 +1,22 @@
 const Cart = require('../models/Cart')
 const User = require('../models/User')
+const Item = require('../models/Item')
 
 // This function is responsible for adding new items to the cart and updating existing ones.
 const addToCart = async (req, res) => {
   const userId = req.params.userId
   const { items } = req.body
-  console.log(items)
+  console.log('Items received:', items)
 
   try {
     const foundedUser = await User.findById(userId)
     if (!foundedUser) {
+      console.error('User not found')
       return res.status(404).json({ error: 'User not found' })
     }
 
     if (!Array.isArray(items)) {
+      console.error('Items must be an array')
       return res.status(400).json({ error: 'Items must be an array.' })
     }
 
@@ -23,28 +26,55 @@ const addToCart = async (req, res) => {
     }).populate('items.item')
 
     if (cart) {
-      items.forEach((newItem) => {
-        const existingItem = cart.items.find(
-          (item) => item.item._id.toString() === newItem.item._id.toString()
+      for (let newItem of items) {
+        let existingItem = cart.items.find(
+          (item) => item.item._id.toString() === newItem.item.toString()
         )
         if (existingItem) {
+          console.log('Updating item quantity:', newItem.item)
           existingItem.quantity = newItem.quantity
         } else {
-          cart.items.push(newItem)
+          console.log('Adding new item:', newItem.item)
+          const itemDetails = await Item.findById(newItem.item)
+          if (!itemDetails) {
+            console.error('Item not found:', newItem.item)
+            return res.status(404).json({ error: 'Item not found' })
+          }
+          cart.items.push({ item: itemDetails, quantity: newItem.quantity })
         }
-      })
-      cart.total_price = cart.items.reduce(
-        (total, item) => total + item.item.price * item.quantity,
-        0
-      )
+      }
+      cart.total_price = cart.items.reduce((total, item) => {
+        if (
+          !item.item.price ||
+          isNaN(item.item.price) ||
+          !item.quantity ||
+          isNaN(item.quantity)
+        ) {
+          console.error('Invalid price or quantity for item:', item)
+          throw new Error('Invalid price or quantity')
+        }
+        return total + item.item.price * item.quantity
+      }, 0)
+
       cart.date = new Date()
     } else {
+      console.log('Creating new cart')
+      const populatedItems = await Promise.all(
+        items.map(async (newItem) => {
+          const itemDetails = await Item.findById(newItem.item)
+          if (!itemDetails) {
+            console.error('Item not found:', newItem.item)
+            throw new Error('Item not found')
+          }
+          return { item: itemDetails, quantity: newItem.quantity }
+        })
+      )
       cart = new Cart({
         user: userId,
-        items,
+        items: populatedItems,
         checked_out: false,
         date: new Date(),
-        total_price: items.reduce(
+        total_price: populatedItems.reduce(
           (total, item) => total + item.item.price * item.quantity,
           0
         )
@@ -52,17 +82,22 @@ const addToCart = async (req, res) => {
     }
 
     const savedCart = await cart.save()
+    console.log('Cart saved:', savedCart)
 
     if (!foundedUser.cart.includes(savedCart._id)) {
+      console.log('Adding cart to user')
       foundedUser.cart.push(savedCart._id)
       await foundedUser.save()
     }
 
     res.json(savedCart)
   } catch (err) {
+    console.error('Internal Server Error:', err)
     res.status(500).json({ error: 'Internal Server Error' })
   }
-} //http://localhost:3001/cart/:userId
+}
+
+//http://localhost:3001/cart/:userId
 
 //This function will delete a specific item from the currect cart.
 const deleteFromCart = async (req, res) => {
