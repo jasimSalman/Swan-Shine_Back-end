@@ -27,7 +27,8 @@ const Register = async (req, res) => {
         passwordDigest,
         type,
         cr,
-        state: false
+        state: false,
+        shop: null
       })
       await user.save()
       return res.status(201).send({ message: 'Pending approval' })
@@ -115,26 +116,25 @@ const UpdatePassword = async (req, res) => {
 //Display shop items for the owner
 const GetShopItems = async (req, res) => {
   try {
-    const { shopId } = req.params
-    const userId = res.locals.payload.id
+    const { userId } = req.params
 
-    const shop = await Shop.findById(shopId)
-
-    if (!shop) {
-      return res.status(404).send({ Message: 'Shop is not found !' })
+    const user = await User.findById(userId).populate('shop')
+    if (!user) {
+      return res.status(404).send({ message: 'User not found!' })
     }
 
-    if (shop.owner.toString() !== userId) {
-      return res.status(403).send({ Message: 'You are Unauthorized !' })
+    if (user.type !== 'owner' || !user.shop) {
+      return res.status(400).send({ message: 'User does not own a shop!' })
     }
 
-    const items = await Item.find({ shop: shopId })
+    const items = await Item.find({ shop: user.shop._id })
     res.status(200).send(items)
   } catch (err) {
-    console.error(error)
+    console.error(err)
     res.status(500).send('Internal server error')
   }
-} // http://localhost:3001/user/shop/:shopId/items
+}
+// http://localhost:3001/user/shop/:userId/items
 
 // this function will display all orders to the shop owner
 const GetShopOrders = async (req, res) => {
@@ -173,7 +173,8 @@ const GetShopOrders = async (req, res) => {
 
 const AcceptShopOwner = async (req, res) => {
   try {
-    const { userId } = req.params
+    const userId = req.params.userId
+    console.log(userId)
 
     let user = await User.findById(userId)
     if (!user) {
@@ -182,10 +183,10 @@ const AcceptShopOwner = async (req, res) => {
     if (user.type !== 'owner') {
       return res.status(400).send('User is not a shop owner')
     }
-    const shop = Shop.create()
+    const shop = await Shop.create()
+    console.log(shop)
     user.state = true
-    user.shop.push(shop)
-
+    user.shop = shop
     await user.save()
 
     res.status(200).send({ message: 'Shop owner has been approved' })
