@@ -9,17 +9,24 @@ const index = async (req, res) => {
   try {
     const categoryId = req.params.categoryId
     console.log(`Category Id = ${categoryId}`)
+
+    if (!categoryId) {
+      return res.status(400).send({ message: 'Category ID is required.' })
+    }
+
     const items = await Item.find({ category: categoryId })
-    res.send(items)
 
     if (items.length === 0) {
       return res.status(404).send({ message: 'No items found.' })
     }
+
+    res.send(items)
   } catch (err) {
-    console.log(err)
+    console.error('Error fetching items:', err)
     res.status(500).send({ message: 'Internal server error' })
   }
-} //http://localhost:3001/items/:categoryId
+}
+//http://localhost:3001/items/:categoryId
 
 //This function will show the item's details
 const show = async (req, res) => {
