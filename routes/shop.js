@@ -11,4 +11,11 @@ router.get(
   shopCtrl.getItemsByShop
 )
 
+router.post(
+  '/:userId',
+  middleware.stripToken,
+  middleware.verifyToken,
+  shopCtrl.createShop
+)
+
 module.exports = router
