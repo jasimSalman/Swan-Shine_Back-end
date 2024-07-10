@@ -1,5 +1,6 @@
 const Shop = require('../models/Shop')
 const Item = require('../models/Item')
+const User = require('../models/User')
 
 //display all shops
 const index = async (req, res) => {
@@ -24,7 +25,41 @@ const getItemsByShop = async (req, res) => {
   }
 } // http://localhost:3001/shop/shopId/items
 
+const createShop = async (req, res) => {
+  const userId = req.params.userId
+  const { shopName, email, poster, location } = req.body
+
+  try {
+    const user = await User.findById(userId)
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    if (user.shop) {
+      return res.status(400).json({ message: 'User already has a shop' })
+    }
+
+    const shop = await Shop.create({
+      name: shopName,
+      owner: userId,
+      email,
+      poster,
+      location
+    })
+
+    user.shop = shop._id
+
+    await user.save()
+
+    return res.status(201).json({ message: 'Shop created successfully', shop })
+  } catch (err) {
+    return res.status(500).json({ message: 'Server error', error: err.message })
+  }
+} //http://localhost:3001/shop/:shopId/:userId
+
 module.exports = {
   index,
-  getItemsByShop
+  getItemsByShop,
+  createShop
 }
