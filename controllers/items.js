@@ -160,13 +160,13 @@ const showReview = async (req, res) => {
 
 //This function will add a new review.
 const addReview = async (req, res) => {
-  const { review: reviewText, rating } = req.body
+  const { content: reviewText, rating } = req.body
   const userId = req.params.userId
   const itemId = req.params.itemId
 
   try {
     const review = new Review({
-      review: reviewText,
+      content: String(reviewText),
       rating,
       user: userId,
       item: itemId
