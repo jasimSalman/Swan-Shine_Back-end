@@ -28,14 +28,20 @@ const addToCart = async (req, res) => {
     if (cart) {
       for (let newItem of items) {
         let existingItem = cart.items.find(
-          (item) => item.item._id.toString() === newItem.item.toString()
+          (item) => item.item._id.toString() === newItem.item._id.toString()
         )
         if (existingItem) {
           console.log('Updating item quantity:', newItem.item)
-          existingItem.quantity = newItem.quantity
+
+          if (newItem.quantity !== 1) {
+            existingItem.quantity = newItem.quantity
+          } else {
+            existingItem.quantity += newItem.quantity
+          }
+          console.log(existingItem.quantity)
         } else {
           console.log('Adding new item:', newItem.item)
-          const itemDetails = await Item.findById(newItem.item)
+          const itemDetails = await Item.findById(newItem.item._id)
           if (!itemDetails) {
             console.error('Item not found:', newItem.item)
             return res.status(404).json({ error: 'Item not found' })

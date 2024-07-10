@@ -66,7 +66,7 @@ const Login = async (req, res) => {
       password
     )
 
-    if (matched && user.state !== false) {
+    if (matched) {
       let payload = {
         id: user._id,
         username: user.username,

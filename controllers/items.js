@@ -50,6 +50,7 @@ const addItem = async (req, res) => {
   try {
     const userId = req.params.userId
     const { name, reqCategory, price, stock, image } = req.body
+    console.log(userId, name, reqCategory, price, stock, image)
 
     const shop = await Shop.findOne({ owner: userId })
     if (!shop) {
