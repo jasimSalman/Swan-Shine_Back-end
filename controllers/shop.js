@@ -27,21 +27,29 @@ const getItemsByShop = async (req, res) => {
 
 const createShop = async (req, res) => {
   const userId = req.params.userId
-  const { shopName, email, poster, location } = req.body
+  const { shopname, email, poster, location } = req.body
+  console.log(shopname, email, poster, location)
+
+  if (!shopname || !email || !poster || !location) {
+    console.error('Missing required fields')
+    return res.status(400).json({ message: 'All fields are required' })
+  }
 
   try {
     const user = await User.findById(userId)
 
     if (!user) {
+      console.error('User not found')
       return res.status(404).json({ message: 'User not found' })
     }
 
     if (user.shop) {
+      console.error('User already has a shop')
       return res.status(400).json({ message: 'User already has a shop' })
     }
 
     const shop = await Shop.create({
-      name: shopName,
+      name: shopname,
       owner: userId,
       email,
       poster,
@@ -49,14 +57,15 @@ const createShop = async (req, res) => {
     })
 
     user.shop = shop._id
-
     await user.save()
 
     return res.status(201).json({ message: 'Shop created successfully', shop })
   } catch (err) {
+    console.error('Server error:', err)
     return res.status(500).json({ message: 'Server error', error: err.message })
   }
-} //http://localhost:3001/shop/:shopId/:userId
+}
+//http://localhost:3001/shop/:userId
 
 module.exports = {
   index,
