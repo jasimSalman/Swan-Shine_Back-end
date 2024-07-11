@@ -191,14 +191,16 @@ const addReview = async (req, res) => {
 
 const deleteReview = async (req, res) => {
   const reviewId = req.params.reviewId
-  const itemId = req.params.itemId
 
   try {
-    const review = await Review.findById(reviewId)
+    const review = await Review.findById(reviewId).populate('item')
     if (!review) {
       return res.status(404).send('Review not found')
     }
-    await Item.updateMany({ _id: itemId }, { $pull: { reviews: reviewId } })
+    await Item.updateMany(
+      { _id: review.item._id },
+      { $pull: { reviews: reviewId } }
+    )
     const deleted = await Review.findByIdAndDelete(reviewId)
 
     if (!deleted) {
