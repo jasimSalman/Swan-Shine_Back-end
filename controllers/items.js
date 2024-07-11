@@ -167,7 +167,7 @@ const addReview = async (req, res) => {
 
   try {
     const review = new Review({
-      review: reviewText,
+      content: reviewText,
       rating,
       user: userId,
       item: itemId
