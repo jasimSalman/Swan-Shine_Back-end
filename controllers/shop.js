@@ -17,7 +17,7 @@ const index = async (req, res) => {
 const getItemsByShop = async (req, res) => {
   const shopId = req.params.shopId
   try {
-    const items = await Item.find({ shop: shopId })
+    const items = await Item.find({ shop: shopId }).populate('shop')
     res.json(items)
   } catch (err) {
     console.error(`Error fetching items for shop ${shopId}`, err)
