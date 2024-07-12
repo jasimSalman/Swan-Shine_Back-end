@@ -34,9 +34,9 @@
 
 ##### Components Hierarchy of the website [here](https://drive.google.com/file/d/1ZAAM00yhLY0L-rhqqAmc3AZT3GdSDAcU/view?usp=sharing).
 
-##### Website wireframe [here]().
+##### Website wireframe [here](https://www.canva.com/design/DAGKErExgKk/TevUFbM7svQW03freMU2dQ/edit?utm_content=DAGKErExgKk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton).
 
-##### The project was deployed and can be viewed [here]().
+##### The project was deployed and can be viewed [here](https://swan-shine.surge.sh/).
 
 ##### Back-end repository [here](https://github.com/jasimSalman/Swan-Shine_Back-end).
 
