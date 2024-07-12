@@ -4,11 +4,13 @@ const shopCtrl = require('../controllers/shop')
 const middleware = require('../middleware')
 
 router.get('/', shopCtrl.index)
-router.get(
-  '/:shopId/items',
+router.get('/:shopId/items', shopCtrl.getItemsByShop)
+
+router.post(
+  '/:userId',
   middleware.stripToken,
   middleware.verifyToken,
-  shopCtrl.getItemsByShop
+  shopCtrl.createShop
 )
 
 module.exports = router

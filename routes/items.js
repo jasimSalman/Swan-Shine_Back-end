@@ -31,7 +31,7 @@ router.post(
 )
 
 router.delete(
-  '/:itemId/reviews/:reviewId',
+  '/reviews/:reviewId',
   middleware.stripToken,
   middleware.verifyToken,
   itemsCtrl.deleteReview

@@ -66,7 +66,7 @@ const Login = async (req, res) => {
       password
     )
 
-    if (matched && user.state !== false) {
+    if (matched) {
       let payload = {
         id: user._id,
         username: user.username,
@@ -115,9 +115,8 @@ const UpdatePassword = async (req, res) => {
 
 //Display shop items for the owner
 const GetShopItems = async (req, res) => {
+  const { userId } = req.params
   try {
-    const { userId } = req.params
-
     const user = await User.findById(userId).populate('shop')
     if (!user) {
       return res.status(404).send({ message: 'User not found!' })

@@ -50,6 +50,7 @@ const addItem = async (req, res) => {
   try {
     const userId = req.params.userId
     const { name, reqCategory, price, stock, image } = req.body
+    console.log(userId, name, reqCategory, price, stock, image)
 
     const shop = await Shop.findOne({ owner: userId })
     if (!shop) {
@@ -190,14 +191,16 @@ const addReview = async (req, res) => {
 
 const deleteReview = async (req, res) => {
   const reviewId = req.params.reviewId
-  const itemId = req.params.itemId
 
   try {
-    const review = await Review.findById(reviewId)
+    const review = await Review.findById(reviewId).populate('item')
     if (!review) {
       return res.status(404).send('Review not found')
     }
-    await Item.updateMany({ _id: itemId }, { $pull: { reviews: reviewId } })
+    await Item.updateMany(
+      { _id: review.item._id },
+      { $pull: { reviews: reviewId } }
+    )
     const deleted = await Review.findByIdAndDelete(reviewId)
 
     if (!deleted) {
