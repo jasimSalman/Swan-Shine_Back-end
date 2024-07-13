@@ -28,7 +28,7 @@
 
 ##### Sign up and sign in as a new user and then begin viewing the different sections of the website.
 
-##### A Trello board was used to keep track of development progress and can be viewed [here](https://trello.com/b/K3XXBG2h/swan-shine).
+##### A Trello board was used to keep track of development progress and can be viewed [here](https://trello.com/b/K3XXBG2h/images).
 
 ##### Entity-Relationship model of the database [here](https://drive.google.com/file/d/1QhjYj1m2hdAIQLapJE7k8AGh1drl5GJP/view?usp=sharing).
 
@@ -39,6 +39,16 @@
 ##### The project was deployed and can be viewed [here]().
 
 ##### Back-end repository [here](https://github.com/jasimSalman/Swan-Shine_Back-end).
+
+---
+
+### **_Screenshots_**
+
+<div align="center" dir="auto">
+  <pre>
+    <img src="public/images/1.png" height="500" />&nbsp;&nbsp;&nbsp;<img src="public/images/2.png" height="500" />&nbsp;&nbsp;&nbsp;<img src="public/images/3.png" height="500" />&nbsp;&nbsp;&nbsp;<img src="public/images/4.png" height="500" />
+  </pre>
+</div>
 
 ---
 
