@@ -70,7 +70,9 @@ const Login = async (req, res) => {
       let payload = {
         id: user._id,
         username: user.username,
-        type: user.type
+        type: user.type,
+        shop: user.type === 'owner' ? user.shop : null,
+        state: user.type === 'owner' ? user.state : null
       }
 
       let token = middleware.createToken(payload)
@@ -140,6 +142,7 @@ const GetShopOrders = async (req, res) => {
   try {
     const { shopId } = req.params
     const userId = res.locals.payload.id
+    console.log(`User Id ==> ${userId}`)
 
     const shop = await Shop.findById(shopId)
 
@@ -155,13 +158,13 @@ const GetShopOrders = async (req, res) => {
       .populate('items.item')
       .populate('user')
 
-    const shopOrders = carts.filter((cart) =>
-      cart.items.some(cartItem.item.shop.toString() === shopId)
-    )
-    if (shopOrders.length === 0) {
-      return res.status(404).send({ Message: 'No orders yet for this shop !' })
-    }
-    res.send(shopOrders)
+    // const shopOrders = carts.filter((cart) =>
+    //   cart.items.some(cartItem.item.shop.toString() === shopId)
+    // )
+    // if (shopOrders.length === 0) {
+    //   return res.status(404).send({ Message: 'No orders yet for this shop !' })
+    // }
+    res.send(carts)
   } catch (err) {
     console.error(err)
     res.status(500).send('Server Error !')
