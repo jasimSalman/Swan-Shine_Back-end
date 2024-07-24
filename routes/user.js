@@ -18,7 +18,7 @@ router.get(
   controller.GetShopItems
 )
 router.get(
-  '/shop/:shopId/orders',
+  '/shop/orders/:shopId',
   middleware.stripToken,
   middleware.verifyToken,
   controller.GetShopOrders

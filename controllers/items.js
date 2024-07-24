@@ -16,9 +16,9 @@ const index = async (req, res) => {
 
     const items = await Item.find({ category: categoryId })
 
-    if (items.length === 0) {
-      return res.status(404).send({ message: 'No items found.' })
-    }
+    // if (items.length === 0) {
+    //   return res.status(404).send({ message: 'No items found.' })
+    // }
 
     res.send(items)
   } catch (err) {
